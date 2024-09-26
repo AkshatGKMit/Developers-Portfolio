@@ -2,15 +2,20 @@ import { validateDeveloper, generateId } from "./helpers/index.js";
 
 let developers: Developer[] = [];
 
-function addDeveloper(dev: Partial<Developer>): void {
-	const isDevValidated = validateDeveloper(dev);
+function addDeveloper(developer: Partial<Developer>) {
+	const isDevValidated = validateDeveloper(developer);
 	if (isDevValidated) {
 		const validatedDev: Developer = {
-			...dev,
+			...developer,
 			id: generateId(developers),
 		} as Developer;
 		developers.push(validatedDev);
 
-		alert(`Developer ${dev.name} added`);
+		alert(`Developer ${developer.name} added`);
 	}
+}
+
+function cloneDeveloper(developer: Developer): Developer {
+	const deepCopy: Developer = JSON.parse(JSON.stringify(developer));
+	return deepCopy;
 }
