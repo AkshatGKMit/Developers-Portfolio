@@ -19,3 +19,14 @@ function cloneDeveloper(developer: Developer): Developer {
 	const deepCopy: Developer = JSON.parse(JSON.stringify(developer));
 	return deepCopy;
 }
+
+function updateDeveloper(developer: Developer, updates: Partial<Developer>) {
+	const { name, age, experience, isEmployed, projects, skills } = developer;
+
+	developer.name = updates.name ?? name;
+	developer.age = updates.age ?? age;
+	developer.experience = updates.experience ?? experience;
+	developer.isEmployed = updates.isEmployed ?? isEmployed;
+	developer.projects = updates.projects ?? projects;
+	developer.skills = updates.skills ?? skills;
+}
