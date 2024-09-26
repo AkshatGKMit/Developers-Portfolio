@@ -35,3 +35,17 @@ function findDevelopersBySkill(matchSkill: string): Developer[] {
 	const skilledDevelopers: Developer[] = developers.filter(({ skills }) => skills.indexOf(matchSkill) !== -1);
 	return skilledDevelopers;
 }
+
+function addSkill(developer: Developer, newSkill: string) {
+	const { name, skills } = developer;
+
+	const isSkillPresent = skills.indexOf(newSkill) !== -1;
+	if (isSkillPresent) {
+		alert(`'${newSkill}' is already present in developer '${name}'`);
+		return;
+	}
+
+	skills.push(newSkill);
+	alert(`'${newSkill}' is added to developer '${name}'`);
+}
+
