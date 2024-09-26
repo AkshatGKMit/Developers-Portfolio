@@ -1,6 +1,6 @@
 import { validateDeveloper, generateId } from "./helpers/index.js";
 
-let developers: Developer[] = [];
+const developers: Developer[] = [];
 
 function addDeveloper(developer: Partial<Developer>) {
 	const isDevValidated = validateDeveloper(developer);
@@ -29,4 +29,9 @@ function updateDeveloper(developer: Developer, updates: Partial<Developer>) {
 	developer.isEmployed = updates.isEmployed ?? isEmployed;
 	developer.projects = updates.projects ?? projects;
 	developer.skills = updates.skills ?? skills;
+}
+
+function findDevelopersBySkill(matchSkill: string): Developer[] {
+	const skilledDevelopers: Developer[] = developers.filter(({ skills }) => skills.indexOf(matchSkill) !== -1);
+	return skilledDevelopers;
 }
