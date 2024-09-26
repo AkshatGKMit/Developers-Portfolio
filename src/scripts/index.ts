@@ -49,3 +49,21 @@ function addSkill(developer: Developer, newSkill: string) {
 	alert(`'${newSkill}' is added to developer '${name}'`);
 }
 
+function updateSkill(developer: Developer, oldSkill: string, newSkill: string) {
+	const { name, skills } = developer;
+
+	const oldSkillIndex = skills.indexOf(oldSkill);
+	if (oldSkillIndex === -1) {
+		alert(`'${oldSkill}' is not present in developer '${name}'`);
+		return;
+	}
+
+	const isNewSkillIndex = skills.indexOf(newSkill) !== -1;
+	if (isNewSkillIndex) {
+		alert(`'${oldSkill}' is already present in developer '${name}'`);
+		return;
+	}
+
+	alert(`'${oldSkill}' is updated to '${newSkill}' for developer ${name}`);
+	skills[oldSkillIndex] = newSkill;
+}
