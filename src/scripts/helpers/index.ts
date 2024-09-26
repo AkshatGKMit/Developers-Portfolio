@@ -37,3 +37,20 @@ export function validateDeveloper(dev: Partial<Developer>): boolean {
 
 	return true;
 }
+
+export function generateId<T extends { id: string }>(list: T[]): string {
+	let isIdUnique = false;
+	let id: number;
+
+	do {
+		const randNum = Math.random();
+		const fiveDigitNum = Math.floor(10000 + randNum * 90000);
+		id = fiveDigitNum;
+
+		const idIndex = list.findIndex((item: T) => fiveDigitNum.toString() === item.id);
+
+		isIdUnique = idIndex === -1;
+	} while (!isIdUnique);
+
+	return id.toString();
+}
