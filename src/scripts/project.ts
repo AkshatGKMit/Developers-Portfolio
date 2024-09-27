@@ -1,3 +1,13 @@
+import { generateId } from "./helpers/index.js";
+
+export function addProject(developer: Developer, project: Partial<Project>) {
+	const isProjectValid = validateProject(project);
+	if (!isProjectValid) return;
+
+	const validatedProject: Project = { ...project, id: generateId(developer.projects) } as Developer;
+	developer.projects.push(validatedProject);
+}
+
 export function validateProject(project: Partial<Project>): boolean {
 	const { name, techStack } = project;
 
