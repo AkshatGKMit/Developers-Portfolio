@@ -1,36 +1,45 @@
 import { validateDeveloper, generateId } from "./helpers/index.js";
 
-export function addDeveloper(developers: Developer[], developer: Partial<Developer>) {
+export function addDeveloper(developers: Developers, developer: Partial<Developer>) {
 	const isDevValidated = validateDeveloper(developer);
-	if (isDevValidated) {
-		const validatedDev: Developer = {
-			...developer,
-			id: generateId(developers),
-		} as Developer;
-		developers.push(validatedDev);
 
-		alert(`Developer ${developer.name} added`);
-	}
+	if (isDevValidated) return;
+
+	const validatedDev = {
+		...developer,
+		id: generateId(developers),
+	};
+	developers.push(validatedDev as Developer);
+
+	alert(`Developer ${developer.name} added`);
 }
 
-export function cloneDeveloper(developers: Developer[], developer: Developer): Developer {
-	const deepCopy: Developer = JSON.parse(JSON.stringify(developer));
+export function cloneDeveloper(developer: Developer, developers?: Developers): Developer {
+	const deepCopy: Developer = {
+		...JSON.parse(JSON.stringify(developer)),
+		id: developers !== undefined ? generateId(developers) : developer.id,
+	};
+
 	return deepCopy;
 }
 
-export function updateDeveloper(developer: Developer, updates: Partial<Developer>) {
-	const { name, age, experience, isEmployed, projects, skills } = developer;
+export function updateDeveloper(developer: Developer, updates: Partial<Developer>): Developer {
+	const clonedDev = cloneDeveloper(developer);
+	const { name, age, experience, isEmployed, projects, skills } = clonedDev;
 
-	developer.name = updates.name ?? name;
-	developer.age = updates.age ?? age;
-	developer.experience = updates.experience ?? experience;
-	developer.isEmployed = updates.isEmployed ?? isEmployed;
-	developer.projects = updates.projects ?? projects;
-	developer.skills = updates.skills ?? skills;
+	clonedDev.name = updates.name ?? name;
+	clonedDev.age = updates.age ?? age;
+	clonedDev.experience = updates.experience ?? experience;
+	clonedDev.isEmployed = updates.isEmployed ?? isEmployed;
+	clonedDev.projects = updates.projects ?? projects;
+	clonedDev.skills = updates.skills ?? skills;
+
+	return clonedDev;
 }
 
-export function findDevelopersBySkill(developers: Developer[], matchSkill: string): Developer[] {
-	const skilledDevelopers: Developer[] = developers.filter(({ skills }) => skills.indexOf(matchSkill) !== -1);
+export function findDevelopersBySkill(developers: Developers, matchSkill: string): Developers {
+	const skilledDevelopers: Developer[] = developers.filter(({ skills }) => skills.some((skill) => skill.toLowerCase() === matchSkill.toLowerCase()));
+
 	return skilledDevelopers;
 }
 
@@ -47,16 +56,20 @@ export function addSkill(developer: Developer, newSkill: string) {
 	alert(`'${newSkill}' is added to developer '${name}'`);
 }
 
-export function updateSkill(developer: Developer, oldSkill: string, newSkill: string) {
-	const { name, skills } = developer;
+export function updateSkill(developer: Developer, oldSkill: string, newSkill: string): Developer | undefined {
+	const cloneDev = JSON.parse(JSON.stringify(developer));
+	const { name, skills } = cloneDev;
 
-	const oldSkillIndex = skills.indexOf(oldSkill);
+	oldSkill = oldSkill.toLowerCase();
+	newSkill = newSkill.toLowerCase();
+
+	const oldSkillIndex = skills.map((skill: string) => skill.toLowerCase()).indexOf(oldSkill);
 	if (oldSkillIndex === -1) {
 		alert(`'${oldSkill}' is not present in developer '${name}'`);
 		return;
 	}
 
-	const isNewSkillIndex = skills.indexOf(newSkill) !== -1;
+	const isNewSkillIndex = skills.map((skill: string) => skill.toLowerCase()).indexOf(newSkill) !== -1;
 	if (isNewSkillIndex) {
 		alert(`'${oldSkill}' is already present in developer '${name}'`);
 		return;
@@ -64,10 +77,12 @@ export function updateSkill(developer: Developer, oldSkill: string, newSkill: st
 
 	alert(`'${oldSkill}' is updated to '${newSkill}' for developer ${name}`);
 	skills[oldSkillIndex] = newSkill;
+
+	return cloneDev;
 }
 
-export function removeDeveloperByCondition({ devs, condition, args = [] }: RemoveDeveloperByConditionType): Developer[] {
-	return devs.filter((developer) => !condition(developer, ...args));
+export function removeDeveloperByCondition({ devs, callbackCondition, args = [] }: RemoveDeveloperByConditionType): Developers {
+	return devs.filter((developer) => !callbackCondition(developer, ...args));
 }
 
 export function sortDevelopersByEmploymentAndAge(developers: Developers, sortByAgeAscending: boolean): Developers {

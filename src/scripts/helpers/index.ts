@@ -1,23 +1,24 @@
 export function validateDeveloper(dev: Partial<Developer>): boolean {
 	const { name, age, isEmployed, experience, skills } = dev;
 
-	if (!name || typeof name !== "string" || name === "") {
+	if (!name) {
 		alert("Invalid developer's name");
 		return false;
 	}
 
-	if (name === "") {
-		alert("Developer name cannot be empty");
-		return false;
-	}
-
-	if (!age || typeof age !== "number") {
+	if (!age) {
 		alert("Invalid developer's age");
 		return false;
 	}
 
 	if (age < 10) {
 		alert("Developer age cannot be less than 10");
+		return false;
+	}
+
+	if (age > 54) {
+		alert("Developer age cannot be more than 54");
+		return false;
 	}
 
 	if (isEmployed && age < 14) {

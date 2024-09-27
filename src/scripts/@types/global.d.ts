@@ -15,8 +15,10 @@ declare interface Developer {
 	experience: number;
 }
 
+type Developers = Developer[];
+
 type RemoveDeveloperByConditionType = {
 	devs: Developer[];
-	condition: (developer: Developer, ...args: any[]) => boolean;
+	callbackCondition: (developer: Developer, ...args: any[]) => boolean;
 	args?: any[];
 };
