@@ -1,4 +1,4 @@
-import { validateDeveloper, generateId } from "./helpers/index";
+import { validateDeveloper, generateId } from "./helpers/index.js";
 
 export function addDeveloper(developers: Developer[], developer: Partial<Developer>) {
 	const isDevValidated = validateDeveloper(developer);
@@ -64,4 +64,8 @@ export function updateSkill(developer: Developer, oldSkill: string, newSkill: st
 
 	alert(`'${oldSkill}' is updated to '${newSkill}' for developer ${name}`);
 	skills[oldSkillIndex] = newSkill;
+}
+
+export function removeDeveloperByCondition({ devs, condition }: RemoveDeveloperByConditionType): Developer[] {
+	return devs.filter((developer) => !condition(developer));
 }

@@ -14,3 +14,9 @@ declare interface Developer {
 	projects: Project[];
 	experience: number;
 }
+
+type RemoveDeveloperByConditionType = {
+	devs: Developer[];
+	condition: (developer: Developer) => boolean;
+	args?: any[];
+};

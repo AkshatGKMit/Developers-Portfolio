@@ -54,3 +54,19 @@ export function generateId<T extends { id: string }>(list: T[]): string {
 
 	return id.toString();
 }
+
+export function removeDevsByAge({ age }: Developer): boolean {
+	return age < 15;
+}
+
+export function removeDevsByIncompleteProject({ projects }: Developer): boolean {
+	return projects.reduce((total, { isCompleted }) => (total += isCompleted ? 0 : 1), 0) > 1;
+}
+
+export function removeDevsBySkill({ skills }: Developer): boolean {
+	return skills.map((skill) => skill.toLowerCase()).indexOf("git") === -1;
+}
+
+export function removeDevsByExperienceAndProjects({ experience, projects }: Developer): boolean {
+	return experience >= 3 && projects.length < 2;
+}
