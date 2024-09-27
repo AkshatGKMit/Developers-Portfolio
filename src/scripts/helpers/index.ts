@@ -81,3 +81,12 @@ export function removeDevsByExperienceAndProjects({ experience, projects }: Deve
 
 	return experience >= minExperience && projects.length < projectLength;
 }
+
+export function deepClone<T>(object: T): T {
+	return JSON.parse(JSON.stringify(object));
+}
+
+export function addProperty<T>(object: T, key: string | number, value: any): T {
+	const clone = deepClone(object);
+	return { ...clone, [key]: value };
+}

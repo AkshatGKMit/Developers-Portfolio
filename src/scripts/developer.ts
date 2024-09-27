@@ -1,4 +1,4 @@
-import { validateDeveloper, generateId } from "./helpers/index.js";
+import { validateDeveloper, generateId, deepClone } from "./helpers/index.js";
 
 export function addDeveloper(developers: Developers, developer: Partial<Developer>) {
 	const isDevValidated = validateDeveloper(developer);
@@ -17,7 +17,7 @@ export function addDeveloper(developers: Developers, developer: Partial<Develope
 export function cloneDeveloper(developer: Developer, developers?: Developers): Developer {
 	const { id } = developer;
 	const deepCopy: Developer = {
-		...JSON.parse(JSON.stringify(developer)),
+		...deepClone(developer),
 		id: developers ? generateId(developers) : id,
 	};
 
