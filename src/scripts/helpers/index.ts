@@ -56,13 +56,17 @@ export function generateId<T extends { id: string }>(list: T[]): string {
 	return id.toString();
 }
 
+export function isValueNumber(value: any): boolean {
+	return typeof value === "number";
+}
+
 export function removeDevsByAge({ age }: Developer, baseAge: number): boolean {
-	if (typeof baseAge !== "number") baseAge = 15;
+	if (!isValueNumber(baseAge)) baseAge = 15;
 	return age < baseAge;
 }
 
 export function removeDevsByIncompleteProject({ projects }: Developer, projectsNumber: number): boolean {
-	if (typeof projectsNumber !== "number") projectsNumber = 1;
+	if (!isValueNumber(projectsNumber)) projectsNumber = 1;
 	return projects.reduce((total, { isCompleted }) => (total += isCompleted ? 0 : 1), 0) > projectsNumber;
 }
 
@@ -72,7 +76,8 @@ export function removeDevsBySkill({ skills }: Developer, skill: string): boolean
 }
 
 export function removeDevsByExperienceAndProjects({ experience, projects }: Developer, minExperience: number, projectLength: number): boolean {
-	if (!minExperience || typeof minExperience !== "number") minExperience = 2;
-	if (!projectLength || typeof projectLength !== "number") projectLength = 1;
+	if (!isValueNumber(minExperience)) minExperience = 2;
+	if (!isValueNumber(projectLength)) projectLength = 1;
+
 	return experience >= minExperience && projects.length < projectLength;
 }

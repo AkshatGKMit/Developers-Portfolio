@@ -15,9 +15,10 @@ export function addDeveloper(developers: Developers, developer: Partial<Develope
 }
 
 export function cloneDeveloper(developer: Developer, developers?: Developers): Developer {
+	const { id } = developer;
 	const deepCopy: Developer = {
 		...JSON.parse(JSON.stringify(developer)),
-		id: developers !== undefined ? generateId(developers) : developer.id,
+		id: developers ? generateId(developers) : id,
 	};
 
 	return deepCopy;
@@ -25,7 +26,7 @@ export function cloneDeveloper(developer: Developer, developers?: Developers): D
 
 export function updateDeveloper(developer: Developer, updates: Partial<Developer>): Developer {
 	const clonedDev = cloneDeveloper(developer);
-	const { name, age, experience, isEmployed, projects, skills } = clonedDev;
+	const { name, age, experience, isEmployed, projects, skills } = clonedDev || {};
 
 	clonedDev.name = updates.name ?? name;
 	clonedDev.age = updates.age ?? age;
@@ -86,13 +87,17 @@ export function removeDeveloperByCondition({ devs, callbackCondition, args = [] 
 }
 
 export function sortDevelopersByEmploymentAndAge(developers: Developers, sortByAgeAscending: boolean): Developers {
-	const sortedDevs = developers.sort((aDev: Developer, bDev: Developer) => {
-		if (aDev.isEmployed && bDev.isEmployed) {
-			return sortByAgeAscending ? aDev.age - bDev.age : bDev.age - aDev.age;
+	const sortedDevs = developers.sort((firstDev: Developer, secondDev: Developer) => {
+		if (firstDev.isEmployed && secondDev.isEmployed) {
+			return sortByAgeAscending ? firstDev.age - secondDev.age : secondDev.age - firstDev.age;
 		}
 
-		return aDev.isEmployed ? -1 : 1;
+		return firstDev.isEmployed ? -1 : 1;
 	});
 
 	return sortedDevs;
+}
+
+export function addProperty<T extends object, K extends keyof any>(object: T, key: K, value: any): T {
+	return { ...object, [key]: value };
 }
