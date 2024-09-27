@@ -66,6 +66,10 @@ export function updateSkill(developer: Developer, oldSkill: string, newSkill: st
 	skills[oldSkillIndex] = newSkill;
 }
 
+export function removeDeveloperByCondition({ devs, condition, args = [] }: RemoveDeveloperByConditionType): Developer[] {
+	return devs.filter((developer) => !condition(developer, ...args));
+}
+
 export function removeDeveloperByCondition({ devs, condition }: RemoveDeveloperByConditionType): Developer[] {
 	return devs.filter((developer) => !condition(developer));
 }

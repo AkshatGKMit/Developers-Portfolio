@@ -55,18 +55,23 @@ export function generateId<T extends { id: string }>(list: T[]): string {
 	return id.toString();
 }
 
-export function removeDevsByAge({ age }: Developer): boolean {
-	return age < 15;
+export function removeDevsByAge({ age }: Developer, baseAge: number): boolean {
+	if (typeof baseAge !== "number") baseAge = 15;
+	return age < baseAge;
 }
 
-export function removeDevsByIncompleteProject({ projects }: Developer): boolean {
-	return projects.reduce((total, { isCompleted }) => (total += isCompleted ? 0 : 1), 0) > 1;
+export function removeDevsByIncompleteProject({ projects }: Developer, projectsNumber: number): boolean {
+	if (typeof projectsNumber !== "number") projectsNumber = 1;
+	return projects.reduce((total, { isCompleted }) => (total += isCompleted ? 0 : 1), 0) > projectsNumber;
 }
 
-export function removeDevsBySkill({ skills }: Developer): boolean {
-	return skills.map((skill) => skill.toLowerCase()).indexOf("git") === -1;
+export function removeDevsBySkill({ skills }: Developer, skill: string): boolean {
+	if (typeof skill !== "string") skill = "react";
+	return skills.map((skill) => skill.toLowerCase()).indexOf(skill.toLowerCase()) !== -1;
 }
 
-export function removeDevsByExperienceAndProjects({ experience, projects }: Developer): boolean {
-	return experience >= 3 && projects.length < 2;
+export function removeDevsByExperienceAndProjects({ experience, projects }: Developer, minExperience: number, projectLength: number): boolean {
+	if (!minExperience || typeof minExperience !== "number") minExperience = 2;
+	if (!projectLength || typeof projectLength !== "number") projectLength = 1;
+	return experience >= minExperience && projects.length < projectLength;
 }

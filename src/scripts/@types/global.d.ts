@@ -17,6 +17,6 @@ declare interface Developer {
 
 type RemoveDeveloperByConditionType = {
 	devs: Developer[];
-	condition: (developer: Developer) => boolean;
+	condition: (developer: Developer, ...args: any[]) => boolean;
 	args?: any[];
 };
