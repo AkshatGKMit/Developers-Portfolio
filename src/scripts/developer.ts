@@ -70,6 +70,14 @@ export function removeDeveloperByCondition({ devs, condition, args = [] }: Remov
 	return devs.filter((developer) => !condition(developer, ...args));
 }
 
-export function removeDeveloperByCondition({ devs, condition }: RemoveDeveloperByConditionType): Developer[] {
-	return devs.filter((developer) => !condition(developer));
+export function sortDevelopersByEmploymentAndAge(developers: Developers, sortByAgeAscending: boolean): Developers {
+	const sortedDevs = developers.sort((aDev: Developer, bDev: Developer) => {
+		if (aDev.isEmployed && bDev.isEmployed) {
+			return sortByAgeAscending ? aDev.age - bDev.age : bDev.age - aDev.age;
+		}
+
+		return aDev.isEmployed ? -1 : 1;
+	});
+
+	return sortedDevs;
 }
