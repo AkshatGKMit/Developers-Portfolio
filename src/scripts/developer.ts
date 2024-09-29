@@ -2,8 +2,7 @@ import { validateDeveloper, generateId, deepClone } from "./helpers/index.js";
 
 export function addDeveloper(developers: Developers, developer: Partial<Developer>) {
 	const isDevValidated = validateDeveloper(developer);
-
-	if (isDevValidated) return;
+	if (!isDevValidated) return;
 
 	const validatedDev = {
 		...developer,
@@ -26,20 +25,12 @@ export function cloneDeveloper(developer: Developer, developers?: Developers): D
 
 export function updateDeveloper(developer: Developer, updates: Partial<Developer>): Developer {
 	const clonedDev = cloneDeveloper(developer);
-	const { name, age, experience, isEmployed, projects, skills } = clonedDev || {};
-
-	clonedDev.name = updates.name ?? name;
-	clonedDev.age = updates.age ?? age;
-	clonedDev.experience = updates.experience ?? experience;
-	clonedDev.isEmployed = updates.isEmployed ?? isEmployed;
-	clonedDev.projects = updates.projects ?? projects;
-	clonedDev.skills = updates.skills ?? skills;
-
-	return clonedDev;
+	const { id } = clonedDev;
+	return { ...clonedDev, ...updates, id: id };
 }
 
 export function findDevelopersBySkill(developers: Developers, matchSkill: string): Developers {
-	const skilledDevelopers: Developer[] = developers.filter(({ skills }) => skills.some((skill) => skill.toLowerCase() === matchSkill.toLowerCase()));
+	const skilledDevelopers: Developers = developers.filter(({ skills }) => skills.some((skill) => skill.toLowerCase() === matchSkill.toLowerCase()));
 
 	return skilledDevelopers;
 }
@@ -87,17 +78,15 @@ export function removeDeveloperByCondition({ devs, callbackCondition, args = [] 
 }
 
 export function sortDevelopersByEmploymentAndAge(developers: Developers, sortByAgeAscending: boolean): Developers {
-	const sortedDevs = developers.sort((firstDev: Developer, secondDev: Developer) => {
-		if (firstDev.isEmployed && secondDev.isEmployed) {
-			return sortByAgeAscending ? firstDev.age - secondDev.age : secondDev.age - firstDev.age;
-		}
+	const sortedDevs = developers.sort(
+		({ age: firstDevAge, isEmployed: firstDevIsEmp }: Developer, { age: secondDevAge, isEmployed: secondDevIsEmp }: Developer) => {
+			if (firstDevIsEmp && secondDevIsEmp) {
+				return sortByAgeAscending ? firstDevAge - secondDevAge : secondDevAge - firstDevAge;
+			}
 
-		return firstDev.isEmployed ? -1 : 1;
-	});
+			return firstDevIsEmp ? -1 : 1;
+		}
+	);
 
 	return sortedDevs;
-}
-
-export function addProperty<T extends object, K extends keyof any>(object: T, key: K, value: any): T {
-	return { ...object, [key]: value };
 }
