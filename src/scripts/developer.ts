@@ -23,6 +23,23 @@ export function cloneDeveloper(developer: Developer, developers?: Developers): D
 	return deepCopy;
 }
 
+export function cloneDeveloperByRecursion<T>(obj: T): T {
+	if (obj === null || typeof obj !== "object") {
+		return obj;
+	}
+
+	if (Array.isArray(obj)) {
+		return obj.map((item) => deepClone(item)) as T;
+	}
+
+	type CloneObjectType = { [key: string | number]: any };
+	const clonedObj: CloneObjectType = {};
+
+	for (const key in obj) clonedObj[key] = obj[key];
+
+	return clonedObj as T;
+}
+
 export function updateDeveloper(developer: Developer, updates: Partial<Developer>): Developer {
 	const clonedDev = cloneDeveloper(developer);
 	const { id } = clonedDev;
